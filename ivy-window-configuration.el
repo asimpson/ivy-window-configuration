@@ -2,7 +2,7 @@
 ;; -*- lexical-binding: t; -*-
 
 ;; Adam Simpson <adam@adamsimpson.net>
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-Requires: (ivy hydra)
 ;; Keywords: ivy, window, window-configuration
 ;; URL: https://github.com/asimpson/ivy-window-configuration/
@@ -43,7 +43,8 @@ to ivy-window-configuration--views which is an alist data structure."
 
 (defun ivy-window-configuration--pop()
   "Go to the most recently stored view."
-  (interactive) (car ivy-window-configuration--views))
+  (interactive) (set-window-configuration (cdr (car ivy-window-configuration--views))))
+
 (defun ivy-window-configuration--list()
   "Generate a list of the stored views for ivy."
   (mapcar (lambda(view)
