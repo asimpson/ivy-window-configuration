@@ -2,7 +2,7 @@
 ;; -*- lexical-binding: t; -*-
 
 ;; Adam Simpson <adam@adamsimpson.net>
-;; Version: 0.0.2
+;; Version: 0.0.3
 ;; Package-Requires: (ivy hydra)
 ;; Keywords: ivy, window, window-configuration
 ;; URL: https://github.com/asimpson/ivy-window-configuration/
@@ -14,6 +14,9 @@
 ;; ivy-window-configuration also works via a standard ivy/counsel interface with deletes bound to M-o d and M-o D respectively.
 
 ;;; Code:
+(require 'ivy)
+(require 'hydra)
+(require 'seq)
 
 (defvar ivy-window-configuration--views
   nil
@@ -51,6 +54,7 @@ to ivy-window-configuration--views which is an alist data structure."
             (car view))
           ivy-window-configuration--views))
 
+;;;###autoload
 (defun ivy-window-configuration(&optional should-delete)
   "Present an ivy/counsel interface to the stored view alist.
 Takes an optional boolean which can initiate a delete."
@@ -62,16 +66,14 @@ Takes an optional boolean which can initiate a delete."
     :action (lambda(view)
               (if should-delete
                   (ivy-window-configuration--delete view)
-                (ivy-window-configuration--restore view))
-              ))
+                (ivy-window-configuration--restore view))))
     (message "No saved views.")))
 
 (ivy-set-actions
  'ivy-window-configuration
  '(
    ("d" ivy-window-configuration--delete "remove from view list")
-   ("D" ivy-window-configuration--delete-all "remove all views from view list")
-   ))
+   ("D" ivy-window-configuration--delete-all "remove all views from view list")))
 
 (defun ivy-window-configuration--delete-all(&optional selection)
   "Wipe out saved views. The optional paramter is ignored and only serves to allow ivy to call this function."
@@ -86,10 +88,10 @@ Takes an optional boolean which can initiate a delete."
 (defun ivy-window-configuration--delete(view)
   "Given a view removes that view from the alist of stored views."
   (setq ivy-window-configuration--views (seq-filter
-    (lambda(x)
-      (not (string= view (car x))))
-    ivy-window-configuration--views)))
-
+                                         (lambda(x)
+                                           (not (string= view (car x))))
+                                         ivy-window-configuration--views)))
+;;;###autoload
 (defhydra ivy-window-configuration--hydra(:exit t)
   "
   Views:
@@ -104,8 +106,7 @@ Takes an optional boolean which can initiate a delete."
   ("s" ivy-window-configuration)
   ("a" ivy-window-configuration--save)
   ("D" ivy-window-configuration--delete-all)
-  ("d" ivy-window-configuration--delete-alt)
-)
+  ("d" ivy-window-configuration--delete-alt))
 
 (provide 'ivy-window-configuration)
 
