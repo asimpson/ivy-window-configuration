@@ -108,6 +108,7 @@ Takes an optional boolean which can initiate a delete."
   ("D" ivy-window-configuration--delete-all)
   ("d" ivy-window-configuration--delete-alt))
 
+(provide 'ivy-window-configuration--hydra)
 (provide 'ivy-window-configuration)
 
 ;;; ivy-window-configuration.el ends here
