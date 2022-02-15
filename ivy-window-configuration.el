@@ -23,24 +23,23 @@
   "Storage for window configs.")
 
 (defun ivy-window-configuration--save()
-  "Retrieves all buffer names from current window and adds that along with the window-configuration
-to ivy-window-configuration--views which is an alist data structure."
+  "Add all buffer names from current-frame to alist `ivy-window-configuration--views`."
   (interactive)
   (let (config names)
     (setq config (current-window-configuration))
     (setq names (mapconcat
-                'identity
-                (mapcar
+                 'identity
+                 (mapcar
                   (lambda(win)
                     (buffer-name (window-buffer win)))
                   (window-list))
-                " "))
+                 " "))
     (push (cons names config) ivy-window-configuration--views)
     (when (y-or-n-p "Zoom? ")
       (delete-other-windows))))
 
 (defun ivy-window-configuration--restore(target)
-  "Given a string that matches a key in our data structure restore a window configuration."
+  "Given a TARGET that matches a key in our data structure restore a window configuration."
   (interactive)
     (set-window-configuration (cdr (assoc target ivy-window-configuration--views))))
 
@@ -57,7 +56,7 @@ to ivy-window-configuration--views which is an alist data structure."
 ;;;###autoload
 (defun ivy-window-configuration(&optional should-delete)
   "Present an ivy/counsel interface to the stored view alist.
-Takes an optional boolean which can initiate a delete."
+Takes an optional boolean SHOULD-DELETE which can initiate a delete."
   (interactive)
   (if ivy-window-configuration--views
     (ivy-read
@@ -76,7 +75,7 @@ Takes an optional boolean which can initiate a delete."
    ("D" ivy-window-configuration--delete-all "remove all views from view list")))
 
 (defun ivy-window-configuration--delete-all(&optional selection)
-  "Wipe out saved views. The optional paramter is ignored and only serves to allow ivy to call this function."
+  "Wipe out saved views.  The optional SELECTION paramter is ignored and only serves to allow ivy to call this function."
   (interactive)
   (setq ivy-window-configuration--views nil))
 
@@ -86,7 +85,7 @@ Takes an optional boolean which can initiate a delete."
   (ivy-window-configuration t))
 
 (defun ivy-window-configuration--delete(view)
-  "Given a view removes that view from the alist of stored views."
+  "Given a VIEW remove that VIEW from the alist of stored views."
   (setq ivy-window-configuration--views (seq-filter
                                          (lambda(x)
                                            (not (string= view (car x))))
